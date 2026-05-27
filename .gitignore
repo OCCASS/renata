@@ -1,0 +1,8 @@
+.DS_Store
+Thumbs.db
+.thumbnail
+node_modules/
+.vscode/
+.idea/
+*.log
+.omc/
