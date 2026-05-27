@@ -101,6 +101,11 @@ app.post('/submit', submitLimiter, async (req, res) => {
       return res.json({ ok: true });
     }
 
+    // 152-ФЗ consent is mandatory before processing PD.
+    if (body.consent !== true) {
+      return res.status(400).json({ ok: false, error: 'Consent required' });
+    }
+
     const name = sanitize(body.name, MAX_NAME);
     const contact = sanitize(body.contact, MAX_CONTACT);
     if (!name || !contact) {
@@ -110,12 +115,14 @@ app.post('/submit', submitLimiter, async (req, res) => {
     const format = sanitize(body.format, MAX_FORMAT);
 
     const NL = '\n';
+    const consentStamp = new Date(ts).toISOString();
     const text =
       '<b>Новая заявка — Renchik.physics</b>' +
       NL + '<b>Имя:</b> ' + escapeHtml(name) +
       NL + '<b>Контакт:</b> ' + escapeHtml(contact) +
       (format ? NL + '<b>Формат:</b> ' + escapeHtml(format) : '') +
-      (message ? NL + '<b>Комментарий:</b> ' + escapeHtml(message) : '');
+      (message ? NL + '<b>Комментарий:</b> ' + escapeHtml(message) : '') +
+      NL + '<i>Согласие на обработку ПД получено: ' + escapeHtml(consentStamp) + '</i>';
 
     const tgRes = await fetch(
       'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage',
