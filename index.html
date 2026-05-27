@@ -34,7 +34,7 @@
     --r-lg: 32px;
     --r-xl: 44px;
     --max: 1280px;
-    --pad: clamp(20px, 4vw, 56px);
+    --pad: clamp(24px, 5vw, 56px);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -120,8 +120,8 @@
   .container {
     max-width: var(--max);
     margin: 0 auto;
-    padding-left: var(--pad);
-    padding-right: var(--pad);
+    padding-left: max(var(--pad), env(safe-area-inset-left));
+    padding-right: max(var(--pad), env(safe-area-inset-right));
     position: relative;
   }
 
@@ -130,23 +130,26 @@
     position: sticky; top: 0; z-index: 50;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    background: linear-gradient(180deg, rgba(2,4,20,0.85) 0%, rgba(2,4,20,0.4) 100%);
+    background: linear-gradient(180deg, rgba(2,4,20,0.9) 0%, rgba(2,4,20,0.55) 100%);
     border-bottom: 1px solid var(--line);
   }
   .hdr-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 16px 0;
-    gap: 16px;
+    padding: 14px 0;
+    gap: 12px;
+    min-height: 60px;
   }
   .logo {
     display: inline-flex; align-items: center; gap: 10px;
     font-family: "Unbounded", sans-serif;
     font-weight: 600;
-    font-size: 17px;
+    font-size: clamp(15px, 1.4vw, 17px);
     letter-spacing: -0.01em;
+    min-width: 0;
   }
   .logo-mark {
-    width: 32px; height: 32px;
+    width: clamp(26px, 2.5vw, 32px);
+    height: clamp(26px, 2.5vw, 32px);
     border-radius: 50%;
     position: relative;
     background:
@@ -184,6 +187,14 @@
 
   @media (max-width: 1023px) {
     .nav { display: none; }
+  }
+  @media (max-width: 560px) {
+    .hdr-row { padding: 10px 0; gap: 10px; min-height: 56px; }
+    .hdr-cta .btn-sm { padding: 8px 14px; font-size: 13px; min-height: 36px; gap: 6px; }
+    .hdr-cta .btn-sm svg { width: 12px; height: 12px; }
+  }
+  @media (max-width: 360px) {
+    .hdr-cta .btn-sm { padding: 8px 12px; }
   }
 
   /* ---------- Buttons ---------- */
@@ -1046,7 +1057,7 @@
   .cta-block {
     position: relative;
     border-radius: var(--r-xl);
-    padding: clamp(40px, 6vw, 80px);
+    padding: clamp(28px, 6vw, 80px) clamp(20px, 5vw, 80px);
     background:
       radial-gradient(800px 500px at 80% 0%, rgba(91,140,255,0.35), transparent 60%),
       radial-gradient(600px 400px at 0% 100%, rgba(181,140,255,0.25), transparent 60%),
@@ -1098,23 +1109,25 @@
   }
   .cta-direct {
     margin-top: 24px;
-    padding: 20px;
+    padding: clamp(14px, 2vw, 20px);
     border-radius: var(--r-md);
     background: rgba(255,255,255,0.04);
     border: 1px solid var(--line);
-    display: flex; align-items: center; gap: 16px;
+    display: flex; align-items: center; gap: 14px;
   }
   .cta-direct-icon {
-    width: 44px; height: 44px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, #6df1ff, #5b8cff);
     display: grid; place-items: center;
     color: var(--bg-0);
     flex-shrink: 0;
   }
+  .cta-direct-icon svg { width: 20px; height: 20px; }
   .cta-direct-text { flex: 1; min-width: 0; }
   .cta-direct-text .l1 { font-weight: 600; font-size: 15px; }
-  .cta-direct-text .l2 { font-size: 13px; color: var(--ink-mute); margin-top: 2px; }
+  .cta-direct-text .l2 { font-size: 13px; color: var(--ink-mute); margin-top: 2px; word-break: break-word; }
+  .cta-direct > svg:last-child { flex-shrink: 0; }
 
   /* Form */
   .form {
@@ -1123,11 +1136,11 @@
     -webkit-backdrop-filter: blur(14px);
     border: 1px solid var(--line-strong);
     border-radius: var(--r-lg);
-    padding: clamp(24px, 3vw, 32px);
+    padding: clamp(20px, 3.5vw, 32px);
   }
   .form-title {
     font-family: "Unbounded", sans-serif;
-    font-size: 22px;
+    font-size: clamp(20px, 2.2vw, 22px);
     font-weight: 500;
     margin-bottom: 20px;
     letter-spacing: -0.02em;
@@ -1147,12 +1160,15 @@
     background: rgba(255,255,255,0.03);
     border: 1px solid var(--line);
     border-radius: var(--r-sm);
-    padding: 14px 16px;
+    padding: 13px 16px;
     color: var(--ink);
     font-family: inherit;
-    font-size: 15px;
+    font-size: 16px;
+    line-height: 1.4;
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
-    min-height: 50px;
+    min-height: 48px;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .input:focus, .textarea:focus {
     outline: none;
@@ -1165,7 +1181,7 @@
 
   .format-options {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
     gap: 8px;
     margin-bottom: 16px;
   }
@@ -1778,8 +1794,8 @@
             <div class="form-title">Заявка</div>
 
             <div class="field-row">
-              <input class="input" type="text" id="f-name" name="name" placeholder="Имя" aria-label="Имя" required />
-              <input class="input" type="text" id="f-contact" name="contact" placeholder="Telegram или email" aria-label="Контакт" required />
+              <input class="input" type="text" id="f-name" name="name" placeholder="Имя" aria-label="Имя" autocomplete="given-name" autocapitalize="words" required />
+              <input class="input" type="text" id="f-contact" name="contact" placeholder="Telegram или email" aria-label="Контакт" autocomplete="email" autocapitalize="none" autocorrect="off" inputmode="email" spellcheck="false" required />
             </div>
 
             <div class="format-label">Формат</div>
