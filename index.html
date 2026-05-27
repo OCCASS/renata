@@ -132,6 +132,12 @@
     -webkit-backdrop-filter: blur(14px);
     background: linear-gradient(180deg, rgba(2,4,20,0.9) 0%, rgba(2,4,20,0.55) 100%);
     border-bottom: 1px solid var(--line);
+    transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .hdr.is-stuck {
+    background: linear-gradient(180deg, rgba(2,4,20,0.96) 0%, rgba(2,4,20,0.85) 100%);
+    border-bottom-color: var(--line-strong);
+    box-shadow: 0 8px 30px -10px rgba(0,4,30,0.8);
   }
   .hdr-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -1348,12 +1354,259 @@
     .h-card-3 { display: none; }
     .grid-bg { display: none; }
   }
+
+  /* ---------- Scroll Reveal ---------- */
+  .sr {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .sr-left  { transform: translateX(-40px); }
+  .sr-right { transform: translateX(40px); }
+  .sr-scale { transform: scale(0.92); }
+  .sr.in-view {
+    opacity: 1;
+    transform: none;
+  }
+  .sr-stagger > * {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .sr-stagger.in-view > * {
+    opacity: 1;
+    transform: none;
+  }
+  .sr-stagger.in-view > *:nth-child(1) { transition-delay: 0.05s; }
+  .sr-stagger.in-view > *:nth-child(2) { transition-delay: 0.15s; }
+  .sr-stagger.in-view > *:nth-child(3) { transition-delay: 0.25s; }
+  .sr-stagger.in-view > *:nth-child(4) { transition-delay: 0.35s; }
+  .sr-stagger.in-view > *:nth-child(5) { transition-delay: 0.45s; }
+  .sr-stagger.in-view > *:nth-child(6) { transition-delay: 0.55s; }
+  .sr-stagger.in-view > *:nth-child(7) { transition-delay: 0.65s; }
+
+  /* ---------- Gradient shift on em ---------- */
+  .hero h1 .em,
+  .sec-title .em,
+  .manifesto blockquote .em,
+  .cta-head h2 .em {
+    background-size: 220% 220%;
+    animation: gradientShift 8s ease-in-out infinite;
+  }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  /* ---------- Planet pulse glow ---------- */
+  .planet {
+    animation: float 8s ease-in-out infinite, planetGlow 6s ease-in-out infinite;
+  }
+  @keyframes planetGlow {
+    0%, 100% {
+      box-shadow:
+        inset -20px -30px 80px rgba(0,0,0,0.6),
+        inset 8px 12px 60px rgba(155,195,255,0.4),
+        0 0 80px rgba(91,140,255,0.35),
+        0 0 200px rgba(91,140,255,0.2);
+    }
+    50% {
+      box-shadow:
+        inset -20px -30px 80px rgba(0,0,0,0.6),
+        inset 8px 12px 60px rgba(155,195,255,0.5),
+        0 0 110px rgba(109,241,255,0.55),
+        0 0 260px rgba(91,140,255,0.35);
+    }
+  }
+
+  /* ---------- Parallax-ready hero scene ---------- */
+  .hero-scene {
+    transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .hero-scene .planet,
+  .hero-scene .h-card,
+  .hero-scene .orbit {
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* ---------- Shooting stars ---------- */
+  .shooting-stars {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .shooting-star {
+    position: absolute;
+    top: var(--y, 20%);
+    left: var(--x, -10%);
+    width: 2px; height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px rgba(255,255,255,0.8);
+    animation: shoot var(--dur, 2.4s) linear forwards;
+    transform: rotate(var(--angle, 18deg));
+    transform-origin: left center;
+  }
+  .shooting-star::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 160px; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9));
+    transform: translateX(0);
+  }
+  @keyframes shoot {
+    0%   { transform: rotate(var(--angle, 18deg)) translateX(0);   opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: rotate(var(--angle, 18deg)) translateX(120vw); opacity: 0; }
+  }
+
+  /* ---------- Format card tilt ---------- */
+  .fmt-card {
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .fmt-card .fmt-title,
+  .fmt-card .fmt-foot,
+  .fmt-card .fmt-feats {
+    transform: translateZ(0);
+    transition: transform 0.4s ease;
+  }
+  .fmt-card.is-tilt .fmt-title { transform: translateZ(30px); }
+  .fmt-card.is-tilt .fmt-feats { transform: translateZ(18px); }
+  .fmt-card.is-tilt .fmt-foot  { transform: translateZ(24px); }
+
+  /* ---------- Magnetic button ---------- */
+  .btn { will-change: transform; }
+  .btn-primary { position: relative; overflow: hidden; }
+  .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.35);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: width 0.6s ease, height 0.6s ease, opacity 0.8s ease;
+    opacity: 0;
+  }
+  .btn-primary.is-ripple::after {
+    width: 360px; height: 360px;
+    opacity: 1;
+    transition: width 0.6s ease, height 0.6s ease, opacity 0s;
+  }
+
+  /* ---------- Underline draw on hero ---------- */
+  .hero h1 .underline::after {
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    transform-origin: left;
+    animation: drawUnderline 1.6s 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+               shimmerLine 4s 2.5s ease-in-out infinite;
+  }
+  @keyframes drawUnderline {
+    from { transform: scaleX(0); opacity: 0; }
+    to   { transform: scaleX(1); opacity: 1; }
+  }
+  @keyframes shimmerLine {
+    0%, 100% { opacity: 1; filter: brightness(1); }
+    50%      { opacity: 0.7; filter: brightness(1.6); }
+  }
+
+  /* ---------- Stat counter glow on reveal ---------- */
+  .stat-num.is-counting {
+    text-shadow: 0 0 24px rgba(109,241,255,0.35);
+    transition: text-shadow 0.6s ease;
+  }
+
+  /* ---------- Section title underline accent ---------- */
+  .sec-eyebrow {
+    position: relative;
+    overflow: hidden;
+  }
+  .sec-eyebrow::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s ease 0.3s;
+  }
+  .sr.in-view .sec-eyebrow::after,
+  .sr-stagger.in-view .sec-eyebrow::after { transform: scaleX(1); }
+
+  /* ---------- Chip hover lift ---------- */
+  .chip {
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  }
+  .chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(109,241,255,0.4);
+    background: rgba(109,241,255,0.06);
+    box-shadow: 0 8px 24px -8px rgba(109,241,255,0.4);
+  }
+
+  /* ---------- Photo card subtle zoom + light sweep ---------- */
+  .photo-card { overflow: hidden; }
+  .photo-card img {
+    transition: transform 1.2s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.6s ease;
+  }
+  .photo-card:hover img {
+    transform: scale(1.05);
+    filter: saturate(1) contrast(1.1);
+  }
+  .photo-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%);
+    transform: translateX(-100%);
+    transition: transform 1.2s ease;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .photo-card:hover::before { transform: translateX(100%); }
+
+  /* ---------- Mission step animated dot ---------- */
+  .ms-step {
+    position: relative;
+  }
+  .ms-step::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(109,241,255,0.4);
+    animation: msRing 2.6s ease-out infinite;
+    opacity: 0;
+  }
+  .ms:hover .ms-step::before { opacity: 1; }
+  @keyframes msRing {
+    0%   { transform: scale(0.9); opacity: 0.8; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+
+  /* ---------- Reduced motion safety ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    .sr, .sr-stagger > * { opacity: 1 !important; transform: none !important; }
+    .shooting-star, .planet, .hero h1 .underline::after { animation: none !important; }
+  }
 </style>
 </head>
 <body>
 
 <div class="cosmos" aria-hidden="true"></div>
 <div class="grid-bg" aria-hidden="true"></div>
+<div class="shooting-stars" aria-hidden="true"></div>
 
 <!-- ============ HEADER ============ -->
 <header class="hdr">
@@ -1472,13 +1725,13 @@
 <!-- ============ PROBLEM / SOLUTION ============ -->
 <section class="sec" id="problem">
   <div class="container">
-    <div class="sec-head">
+    <div class="sec-head sr">
       <div class="sec-eyebrow">Проблема и решение</div>
       <h2 class="sec-title">Когда формулы кажутся <span class="em">хаосом</span> — это не про физику, это про подачу.</h2>
       <p class="sec-lede">Физика не сложная — её просто плохо рассказывают. Я меняю отношение и собираю знание в систему, которой можно пользоваться на экзамене и в жизни.</p>
     </div>
 
-    <div class="ps-wrap">
+    <div class="ps-wrap sr-stagger">
       <div class="ps-col ps-col-problem">
         <span class="ps-tag ps-tag-p">Знакомо?</span>
         <h3 class="ps-head">Как сейчас</h3>
@@ -1531,12 +1784,12 @@
 <!-- ============ ABOUT ============ -->
 <section class="sec" id="about">
   <div class="container">
-    <div class="sec-head">
+    <div class="sec-head sr">
       <div class="sec-eyebrow">Обо мне</div>
       <h2 class="sec-title">Я Рената. И когда-то <span class="em">я тоже</span> учила физику с нуля.</h2>
     </div>
 
-    <div class="about-grid">
+    <div class="about-grid sr-stagger">
       <div class="photo-card">
         <img src="images/renata-msu.png" alt="Рената на фоне главного здания МГУ" loading="lazy" />
         <div class="photo-overlay">
@@ -1569,13 +1822,13 @@
 <!-- ============ FORMATS ============ -->
 <section class="sec" id="formats">
   <div class="container">
-    <div class="sec-head">
+    <div class="sec-head sr">
       <div class="sec-eyebrow">Форматы занятий</div>
       <h2 class="sec-title">Три траектории — <span class="em">выбирай свою.</span></h2>
       <p class="sec-lede">Можно прийти на пробное и решить вместе, что подойдёт именно тебе. Все форматы доступны онлайн и офлайн в Казани и Москве.</p>
     </div>
 
-    <div class="formats-grid">
+    <div class="formats-grid sr-stagger">
       <!-- Card 1 -->
       <article class="fmt-card">
         <div class="fmt-head">
@@ -1646,14 +1899,14 @@
 <!-- ============ HOW LESSONS WORK ============ -->
 <section class="sec" id="how">
   <div class="container">
-    <div class="sec-head">
+    <div class="sec-head sr">
       <div class="sec-eyebrow">Маршрут миссии</div>
       <h2 class="sec-title">Как проходят <span class="em">занятия</span></h2>
       <p class="sec-lede">Системный путь от первой встречи до уверенного результата — без хаоса и зубрёжки.</p>
     </div>
 
     <div class="mission">
-      <div class="mission-steps">
+      <div class="mission-steps sr-stagger">
         <div class="ms">
           <div class="ms-step">01</div>
           <div class="ms-title">Диагностика</div>
@@ -1687,7 +1940,7 @@
 <!-- ============ MANIFESTO ============ -->
 <section class="manifesto">
   <div class="manifesto-orbit" aria-hidden="true"></div>
-  <div class="container">
+  <div class="container sr sr-scale">
     <blockquote>
       «Физика — это не скучные формулы, это <span class="em">язык,</span> на котором написана Вселенная. И каждому стоило бы изучить его.»
     </blockquote>
@@ -1698,12 +1951,12 @@
 <!-- ============ FAQ ============ -->
 <section class="sec" id="faq">
   <div class="container">
-    <div class="sec-head">
+    <div class="sec-head sr">
       <div class="sec-eyebrow">Частые вопросы</div>
       <h2 class="sec-title">Если есть <span class="em">сомнения</span> — это нормально.</h2>
     </div>
 
-    <div class="faq-list">
+    <div class="faq-list sr-stagger">
       <div class="faq-item">
         <button class="faq-btn" aria-expanded="false">
           <span>Подойдёт, если я начинаю почти с нуля?</span>
@@ -1771,7 +2024,7 @@
 <section class="sec" id="contact">
   <div class="container">
     <div class="cta-block">
-      <div class="cta-grid">
+      <div class="cta-grid sr-stagger">
         <div class="cta-head">
           <div class="sec-eyebrow">Старт</div>
           <h2>Начни понимать физику <span class="em" style="background: linear-gradient(120deg, #6df1ff, #b58cff); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: italic; font-weight: 400;">уже на пробном.</span></h2>
@@ -1935,6 +2188,163 @@
   });
 
   /* Smooth scroll: already handled by html { scroll-behavior } */
+
+  /* ---------- Reduced motion guard ---------- */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Scroll Reveal (IntersectionObserver) ---------- */
+  if ('IntersectionObserver' in window && !prefersReduced) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    document.querySelectorAll('.sr, .sr-stagger').forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.sr, .sr-stagger').forEach(el => el.classList.add('in-view'));
+  }
+
+  /* ---------- Animated stat counter ---------- */
+  const statEls = document.querySelectorAll('.stat-num');
+  const animateCount = (el) => {
+    const raw = el.textContent.trim();
+    const m = raw.match(/^(\d+)/);
+    if (!m) return;
+    const target = parseInt(m[1], 10);
+    const suffix = raw.slice(m[1].length);
+    const dur = 1400;
+    const start = performance.now();
+    el.classList.add('is-counting');
+    const tick = (now) => {
+      const t = Math.min(1, (now - start) / dur);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(target * eased);
+      el.innerHTML = val + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+      else setTimeout(() => el.classList.remove('is-counting'), 400);
+    };
+    requestAnimationFrame(tick);
+  };
+  if ('IntersectionObserver' in window && !prefersReduced) {
+    const statIo = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          statIo.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    statEls.forEach(el => statIo.observe(el));
+  }
+
+  /* ---------- Mouse parallax on hero scene ---------- */
+  const scene = document.querySelector('.hero-scene');
+  if (scene && !prefersReduced && window.matchMedia('(pointer: fine)').matches) {
+    const planet = scene.querySelector('.planet');
+    const cards = scene.querySelectorAll('.h-card');
+    const orbits = scene.querySelectorAll('.orbit');
+    let raf = null;
+    scene.addEventListener('mousemove', (e) => {
+      const r = scene.getBoundingClientRect();
+      const cx = (e.clientX - r.left) / r.width - 0.5;
+      const cy = (e.clientY - r.top) / r.height - 0.5;
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        if (planet) planet.style.transform = `translate(${cx * 18}px, ${cy * 18}px)`;
+        cards.forEach((c, i) => {
+          const k = (i + 1) * 10;
+          c.style.transform = `translate(${cx * k}px, ${cy * k}px)`;
+        });
+        orbits.forEach((o, i) => {
+          const k = (i + 1) * 4;
+          o.style.transform = `translate(${cx * k}px, ${cy * k}px)`;
+        });
+      });
+    });
+    scene.addEventListener('mouseleave', () => {
+      if (planet) planet.style.transform = '';
+      cards.forEach(c => c.style.transform = '');
+      orbits.forEach(o => o.style.transform = '');
+    });
+  }
+
+  /* ---------- 3D tilt on format cards ---------- */
+  if (!prefersReduced && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.fmt-card').forEach(card => {
+      let raf = null;
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          card.classList.add('is-tilt');
+          card.style.transform = `perspective(1000px) rotateY(${x * 7}deg) rotateX(${-y * 7}deg) translateY(-6px)`;
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        card.classList.remove('is-tilt');
+        card.style.transform = '';
+      });
+    });
+  }
+
+  /* ---------- Magnetic primary buttons ---------- */
+  if (!prefersReduced && window.matchMedia('(pointer: fine)').matches) {
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const r = btn.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        btn.style.transform = `translate(${x * 8}px, ${y * 6 - 2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+      btn.addEventListener('click', () => {
+        btn.classList.remove('is-ripple');
+        void btn.offsetWidth;
+        btn.classList.add('is-ripple');
+        setTimeout(() => btn.classList.remove('is-ripple'), 700);
+      });
+    });
+  }
+
+  /* ---------- Shooting stars (occasional) ---------- */
+  const starHost = document.querySelector('.shooting-stars');
+  if (starHost && !prefersReduced) {
+    const spawn = () => {
+      const s = document.createElement('div');
+      s.className = 'shooting-star';
+      s.style.setProperty('--y', (Math.random() * 60) + '%');
+      s.style.setProperty('--x', (-10 - Math.random() * 10) + '%');
+      s.style.setProperty('--angle', (10 + Math.random() * 20) + 'deg');
+      s.style.setProperty('--dur', (1.6 + Math.random() * 1.4) + 's');
+      starHost.appendChild(s);
+      setTimeout(() => s.remove(), 3500);
+    };
+    const loop = () => {
+      spawn();
+      setTimeout(loop, 4000 + Math.random() * 6000);
+    };
+    setTimeout(loop, 2000);
+  }
+
+  /* ---------- Header shadow on scroll ---------- */
+  const hdr = document.querySelector('.hdr');
+  if (hdr) {
+    let last = 0;
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y > 20 && !hdr.classList.contains('is-stuck')) hdr.classList.add('is-stuck');
+      else if (y <= 20 && hdr.classList.contains('is-stuck')) hdr.classList.remove('is-stuck');
+      last = y;
+    };
+    document.addEventListener('scroll', onScroll, { passive: true });
+  }
 </script>
 
 </body>
