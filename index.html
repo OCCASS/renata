@@ -1232,6 +1232,29 @@
     width: 100%;
     margin-top: 8px;
   }
+
+  /* Honeypot — visually hidden but still in the DOM/tab order for bots */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .form-error {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: var(--r-sm);
+    background: rgba(255,140,180,0.08);
+    border: 1px solid rgba(255,140,180,0.3);
+    color: #ffaecb;
+    font-size: 13px;
+  }
+  .form-error.is-shown { display: block; }
+  .form-submit[disabled] { opacity: 0.7; cursor: progress; }
   .form-success {
     display: none;
     text-align: center;
@@ -2044,9 +2067,16 @@
           </a>
         </div>
 
-        <form class="form" id="signup-form" novalidate>
+        <form class="form" id="signup-form" novalidate
+              data-endpoint="/submit">
           <div class="form-body">
             <div class="form-title">Заявка</div>
+
+            <!-- Honeypot: hidden from humans, bots tend to fill every field. -->
+            <div class="hp-field" aria-hidden="true">
+              <label for="f-website">Website</label>
+              <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
 
             <div class="field-row">
               <input class="input" type="text" id="f-name" name="name" placeholder="Имя" aria-label="Имя" autocomplete="given-name" autocapitalize="words" required />
@@ -2077,6 +2107,8 @@
               Отправить
               <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </button>
+
+            <div class="form-error" role="alert" aria-live="polite"></div>
           </div>
 
           <div class="form-success" role="status" aria-live="polite">
@@ -2175,18 +2207,73 @@
     });
   });
 
-  /* Form submit */
+  /* Form submit — sends to a server-side proxy that forwards to Telegram. */
   const form = document.getElementById('signup-form');
-  form.addEventListener('submit', (e) => {
+  const formLoadedAt = Date.now();
+
+  const showFormError = (msg) => {
+    const el = form.querySelector('.form-error');
+    el.textContent = msg;
+    el.classList.add('is-shown');
+  };
+  const clearFormError = () => {
+    const el = form.querySelector('.form-error');
+    el.textContent = '';
+    el.classList.remove('is-shown');
+  };
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    clearFormError();
+
     const name = form.querySelector('#f-name').value.trim();
     const contact = form.querySelector('#f-contact').value.trim();
+    const message = form.querySelector('#f-msg').value.trim();
+    const format = (form.querySelector('input[name="format"]:checked') || {}).value || '';
+    const honeypot = form.querySelector('#f-website').value;
+
+    // Honeypot trip — silently "succeed" so the bot can't tune retries.
+    if (honeypot) {
+      form.classList.add('is-sent');
+      return;
+    }
+    // Time trap — humans take more than ~2s to fill the form.
+    if (Date.now() - formLoadedAt < 2000) {
+      form.classList.add('is-sent');
+      return;
+    }
     if (!name || !contact) {
       if (!name) form.querySelector('#f-name').focus();
       else form.querySelector('#f-contact').focus();
       return;
     }
-    form.classList.add('is-sent');
+
+    const endpoint = form.dataset.endpoint;
+    const submitBtn = form.querySelector('.form-submit');
+    submitBtn.disabled = true;
+
+    try {
+      if (!endpoint) throw new Error('Endpoint is not configured.');
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, contact, message, format,
+          website: honeypot,                  // proxy double-checks honeypot
+          ts: formLoadedAt,                   // proxy can re-verify time trap
+          page: location.href,
+        }),
+      });
+      if (!res.ok) {
+        const txt = await res.text().catch(() => '');
+        throw new Error('HTTP ' + res.status + ' ' + txt);
+      }
+      form.classList.add('is-sent');
+    } catch (err) {
+      console.error('Form submit failed:', err);
+      showFormError('Не получилось отправить. Напишите, пожалуйста, в Telegram @renchikik.');
+      submitBtn.disabled = false;
+    }
   });
 
   /* Smooth scroll: already handled by html { scroll-behavior } */

@@ -6,3 +6,10 @@ node_modules/
 .idea/
 *.log
 .omc/
+
+# Server secrets — never commit
+.env
+.env.local
+.env.*.local
+server/.env
+
