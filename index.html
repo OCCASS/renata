@@ -344,6 +344,8 @@
     -webkit-background-clip: text; background-clip: text;
     color: transparent;
     line-height: 1;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
   }
   .stat-lbl {
     font-size: 12px;
@@ -2210,11 +2212,19 @@
   /* ---------- Animated stat counter ---------- */
   const statEls = document.querySelectorAll('.stat-num');
   const animateCount = (el) => {
+    const finalHTML = el.innerHTML;
     const raw = el.textContent.trim();
     const m = raw.match(/^(\d+)/);
     if (!m) return;
     const target = parseInt(m[1], 10);
     const suffix = raw.slice(m[1].length);
+
+    // Reserve final width so width-varying digits don't make the row jitter.
+    const rect = el.getBoundingClientRect();
+    el.style.display = 'inline-block';
+    el.style.minWidth = rect.width + 'px';
+    el.style.textAlign = 'left';
+
     const dur = 1400;
     const start = performance.now();
     el.classList.add('is-counting');
@@ -2222,9 +2232,13 @@
       const t = Math.min(1, (now - start) / dur);
       const eased = 1 - Math.pow(1 - t, 3);
       const val = Math.round(target * eased);
-      el.innerHTML = val + suffix;
-      if (t < 1) requestAnimationFrame(tick);
-      else setTimeout(() => el.classList.remove('is-counting'), 400);
+      if (t < 1) {
+        el.textContent = val + suffix;
+        requestAnimationFrame(tick);
+      } else {
+        el.innerHTML = finalHTML;
+        setTimeout(() => el.classList.remove('is-counting'), 400);
+      }
     };
     requestAnimationFrame(tick);
   };
