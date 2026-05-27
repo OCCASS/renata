@@ -29,6 +29,11 @@ origin.
 ## Run in production
 
 ```sh
+# 1. Build the Astro site at the repo root → dist/
+npm ci
+npm run build
+
+# 2. Start the server (serves ../dist/ + /submit)
 cd server
 npm ci --omit=dev
 NODE_ENV=production npm start

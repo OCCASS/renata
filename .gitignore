@@ -13,3 +13,7 @@ node_modules/
 .env.*.local
 server/.env
 
+# Astro build output and cache
+dist/
+.astro/
+

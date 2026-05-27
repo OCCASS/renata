@@ -6,7 +6,8 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.resolve(__dirname, '..');
+// Astro build output. Run `npm run build` at repo root to populate it.
+const ROOT = path.resolve(__dirname, '..', 'dist');
 
 const {
   PORT = 3000,
