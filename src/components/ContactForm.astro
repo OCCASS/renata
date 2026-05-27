@@ -1,3 +1,6 @@
+---
+const base = import.meta.env.BASE_URL;
+---
 <section class="sec" id="contact">
   <div class="container">
     <div class="cta-block">
@@ -20,7 +23,7 @@
         </div>
 
         <form class="form" id="signup-form" novalidate
-              data-endpoint="/submit">
+              data-endpoint={`${base}submit`}>
           <div class="form-body">
             <div class="form-title">Заявка</div>
 
@@ -62,7 +65,7 @@
               </span>
               <span class="consent-text">
                 Я согласен на обработку моих персональных данных в соответствии с
-                <a href="/privacy" target="_blank" rel="noopener">политикой обработки персональных данных</a>.
+                <a href={`${base}privacy`} target="_blank" rel="noopener">политикой обработки персональных данных</a>.
               </span>
             </label>
 

@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 const lastUpdated = '2026-05-27';
+const base = import.meta.env.BASE_URL;
 ---
 
 <Layout
@@ -196,7 +197,7 @@ const lastUpdated = '2026-05-27';
           </p>
 
           <p class="legal-back">
-            <a class="btn btn-ghost btn-sm" href="/">← На главную</a>
+            <a class="btn btn-ghost btn-sm" href={base}>← На главную</a>
           </p>
         </article>
       </div>
