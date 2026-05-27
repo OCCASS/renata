@@ -62,9 +62,9 @@
   .cosmos {
     position: fixed; inset: 0; z-index: -2;
     background:
-      radial-gradient(1100px 700px at 80% -10%, rgba(91, 140, 255, 0.28), transparent 60%),
-      radial-gradient(900px 600px at -10% 30%, rgba(109, 241, 255, 0.12), transparent 60%),
-      radial-gradient(1200px 800px at 50% 110%, rgba(181, 140, 255, 0.16), transparent 60%),
+      radial-gradient(min(1100px, 80vw) min(700px, 50vh) at 80% -10%, rgba(91, 140, 255, 0.28), transparent 60%),
+      radial-gradient(min(900px, 70vw) min(600px, 45vh) at -10% 30%, rgba(109, 241, 255, 0.12), transparent 60%),
+      radial-gradient(min(1200px, 90vw) min(800px, 55vh) at 50% 110%, rgba(181, 140, 255, 0.16), transparent 60%),
       linear-gradient(180deg, #020414 0%, #050a22 40%, #020414 100%);
     pointer-events: none;
   }
@@ -93,6 +93,11 @@
   @keyframes twinkle {
     from { opacity: 0.55; }
     to { opacity: 1; }
+  }
+  @media (max-width: 768px) {
+    .cosmos::before, .cosmos::after { opacity: 0.5; }
+    .cosmos::before { animation: none; }
+    .cosmos::after { animation: none; }
   }
 
   /* Grid lines (subtle) */
@@ -130,7 +135,7 @@
   }
   .hdr-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 0;
+    padding-block: 14px;
     gap: 12px;
     min-height: 60px;
   }
@@ -184,7 +189,7 @@
     .nav { display: none; }
   }
   @media (max-width: 560px) {
-    .hdr-row { padding: 10px 0; gap: 10px; min-height: 56px; }
+    .hdr-row { padding-block: 10px; gap: 10px; min-height: 56px; }
     .hdr-cta .btn-sm { padding: 8px 14px; font-size: 13px; min-height: 36px; gap: 6px; }
     .hdr-cta .btn-sm svg { width: 12px; height: 12px; }
   }
