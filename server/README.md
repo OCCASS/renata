@@ -45,6 +45,22 @@ with `TRUST_PROXY=1` and `ALLOWED_ORIGIN=https://renchik.example` in `.env`.
 Use a process manager — `systemd`, `pm2`, or Docker — to keep the node
 process alive across reboots.
 
+## Working through a proxy
+
+When the server runs from a network where `api.telegram.org` is blocked
+(e.g. Russian hosting), set `TELEGRAM_PROXY_URL` to tunnel the bot calls
+through a proxy. SOCKS5 is preferred; HTTP CONNECT is also supported.
+
+```
+# .env
+TELEGRAM_PROXY_URL=socks5://user:pass@1.2.3.4:1080
+# or
+TELEGRAM_PROXY_URL=http://proxy.example:3128
+```
+
+The proxy is only used for the outbound Telegram API request — incoming
+form submissions still go through your usual server stack.
+
 ## Setting up the Telegram bot
 
 1. Open `@BotFather` in Telegram, send `/newbot`, follow prompts, copy the

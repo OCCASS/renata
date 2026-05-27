@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import express from 'express';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { buildProxyAgent, sendTelegramMessage } from './telegram.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Astro build output. Run `npm run build` at repo root to populate it.
@@ -14,9 +15,22 @@ const {
   NODE_ENV = 'development',
   TELEGRAM_BOT_TOKEN,
   TELEGRAM_CHAT_ID,
+  TELEGRAM_PROXY_URL = '',
   ALLOWED_ORIGIN = '',
   TRUST_PROXY = '0',
 } = process.env;
+
+let telegramProxyAgent;
+try {
+  telegramProxyAgent = buildProxyAgent(TELEGRAM_PROXY_URL);
+  if (telegramProxyAgent) {
+    const scheme = TELEGRAM_PROXY_URL.split('://')[0];
+    console.log('[telegram] outbound via ' + scheme + ' proxy');
+  }
+} catch (err) {
+  console.error('FATAL: ' + err.message);
+  process.exit(1);
+}
 
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
   console.error('FATAL: TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID must be set.');
@@ -124,23 +138,15 @@ app.post('/submit', submitLimiter, async (req, res) => {
       (message ? NL + '<b>Комментарий:</b> ' + escapeHtml(message) : '') +
       NL + '<i>Согласие на обработку ПД получено: ' + escapeHtml(consentStamp) + '</i>';
 
-    const tgRes = await fetch(
-      'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TELEGRAM_CHAT_ID,
-          text,
-          parse_mode: 'HTML',
-          disable_web_page_preview: true,
-        }),
-      },
-    );
+    const tgRes = await sendTelegramMessage({
+      token: TELEGRAM_BOT_TOKEN,
+      chatId: TELEGRAM_CHAT_ID,
+      text,
+      proxyAgent: telegramProxyAgent,
+    });
 
     if (!tgRes.ok) {
-      const detail = await tgRes.text().catch(() => '');
-      console.error('[telegram]', tgRes.status, detail.slice(0, 300));
+      console.error('[telegram]', tgRes.status, String(tgRes.body).slice(0, 300));
       return res.status(502).json({ ok: false, error: 'Upstream error' });
     }
     return res.json({ ok: true });
