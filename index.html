@@ -1,32 +1,1925 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Renchik — репетитор по физике</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Unbounded:wght@300;400;500;700&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Renchik.physics — репетитор по физике ЕГЭ, ОГЭ</title>
+<meta name="description" content="Репетитор по физике: подготовка к ЕГЭ, ОГЭ и школьной программе. Мини-группы и индивидуальные занятия, понятное объяснение физики и подготовка к экзаменам." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *,*::before,*::after{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:#04060f;color:#e9ecf5;-webkit-font-smoothing:antialiased}
-  body{font-family:var(--font-body,"Manrope"),system-ui,sans-serif;overflow-x:hidden}
-  ::selection{background:rgba(255,255,255,.18);color:#fff}
-  a{color:inherit}
-  button{font-family:inherit}
+  /* ---------- Tokens ---------- */
+  :root {
+    --bg-0: #020414;
+    --bg-1: #050a22;
+    --bg-2: #08123a;
+    --bg-3: #0d1b52;
+    --ink: #f4f7ff;
+    --ink-mute: #aebbe0;
+    --ink-dim: #6e7ca8;
+    --line: rgba(120, 160, 255, 0.14);
+    --line-strong: rgba(140, 180, 255, 0.28);
+    --cyan: #6df1ff;
+    --blue: #5b8cff;
+    --violet: #b58cff;
+    --ice: #e8f1ff;
+    --gold: #ffd791;
+    --glass: rgba(15, 28, 70, 0.55);
+    --glass-2: rgba(20, 36, 88, 0.4);
+    --shadow-deep: 0 30px 80px -20px rgba(0, 4, 30, 0.7);
+    --r-xs: 10px;
+    --r-sm: 14px;
+    --r-md: 22px;
+    --r-lg: 32px;
+    --r-xl: 44px;
+    --max: 1280px;
+    --pad: clamp(20px, 4vw, 56px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg-0);
+    color: var(--ink);
+    font-family: "Manrope", system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  ::selection { background: var(--cyan); color: var(--bg-0); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+  img { max-width: 100%; display: block; }
+
+  h1, h2, h3, h4 {
+    font-family: "Unbounded", "Manrope", sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  p { margin: 0; }
+
+  .mono { font-family: "JetBrains Mono", monospace; letter-spacing: 0.02em; }
+
+  /* ---------- Cosmic Background (fixed) ---------- */
+  .cosmos {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(1100px 700px at 80% -10%, rgba(91, 140, 255, 0.28), transparent 60%),
+      radial-gradient(900px 600px at -10% 30%, rgba(109, 241, 255, 0.12), transparent 60%),
+      radial-gradient(1200px 800px at 50% 110%, rgba(181, 140, 255, 0.16), transparent 60%),
+      linear-gradient(180deg, #020414 0%, #050a22 40%, #020414 100%);
+    pointer-events: none;
+  }
+  .cosmos::before, .cosmos::after {
+    content: ""; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, rgba(255,255,255,0.9), transparent 50%),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.7), transparent 50%),
+      radial-gradient(1.2px 1.2px at 65% 75%, rgba(255,255,255,0.8), transparent 50%),
+      radial-gradient(1px 1px at 35% 60%, rgba(180,210,255,0.7), transparent 50%),
+      radial-gradient(2px 2px at 90% 45%, rgba(255,255,255,0.95), transparent 50%),
+      radial-gradient(1px 1px at 15% 85%, rgba(255,255,255,0.6), transparent 50%),
+      radial-gradient(1.4px 1.4px at 55% 20%, rgba(220,235,255,0.85), transparent 50%),
+      radial-gradient(1px 1px at 5% 50%, rgba(255,255,255,0.6), transparent 50%),
+      radial-gradient(1.3px 1.3px at 75% 90%, rgba(255,255,255,0.7), transparent 50%);
+    background-size: 1200px 1000px;
+    animation: twinkle 6s ease-in-out infinite alternate;
+  }
+  .cosmos::after {
+    background-size: 800px 700px;
+    background-position: 200px 100px;
+    opacity: 0.5;
+    animation-duration: 9s;
+    animation-delay: -3s;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.55; }
+    to { opacity: 1; }
+  }
+
+  /* Grid lines (subtle) */
+  .grid-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(120,160,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120,160,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 30%, transparent 80%);
+  }
+
+  /* ---------- Container ---------- */
+  .container {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+    position: relative;
+  }
+
+  /* ---------- Header ---------- */
+  .hdr {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: linear-gradient(180deg, rgba(2,4,20,0.85) 0%, rgba(2,4,20,0.4) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0;
+    gap: 16px;
+  }
+  .logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    position: relative;
+    background:
+      radial-gradient(circle at 35% 30%, #9bd5ff, #2a4fb8 55%, #050a22 100%);
+    box-shadow:
+      inset 0 0 12px rgba(255,255,255,0.18),
+      0 0 16px rgba(91,140,255,0.45);
+    flex-shrink: 0;
+  }
+  .logo-mark::after {
+    content: ""; position: absolute; inset: -4px;
+    border: 1px solid rgba(109,241,255,0.5);
+    border-radius: 50%;
+    transform: rotate(-25deg) scaleY(0.3);
+  }
+  .logo-dot { color: var(--cyan); }
+
+  .nav { display: flex; gap: 28px; align-items: center; }
+  .nav a {
+    font-size: 14px;
+    color: var(--ink-mute);
+    transition: color 0.2s ease;
+    position: relative;
+  }
+  .nav a:hover { color: var(--ink); }
+  .nav a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -6px;
+    height: 1px; background: var(--cyan);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+  .nav a:hover::after { transform: scaleX(1); }
+
+  .hdr-cta { display: flex; align-items: center; gap: 12px; }
+
+  @media (max-width: 1023px) {
+    .nav { display: none; }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 15px;
+    min-height: 44px;
+    letter-spacing: -0.01em;
+    transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.2s ease;
+    border: 1px solid transparent;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6df1ff 0%, #5b8cff 100%);
+    color: #02061a;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.2) inset,
+      0 14px 36px -10px rgba(91,140,255,0.65),
+      0 0 28px rgba(109,241,255,0.25);
+  }
+  .btn-primary:hover {
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.3) inset,
+      0 18px 50px -10px rgba(91,140,255,0.8),
+      0 0 36px rgba(109,241,255,0.4);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(180,210,255,0.18);
+    color: var(--ice);
+    backdrop-filter: blur(8px);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(180,210,255,0.35);
+  }
+  .btn-sm { padding: 10px 18px; min-height: 38px; font-size: 14px; }
+  .btn-arrow { transition: transform 0.2s ease; }
+  .btn:hover .btn-arrow { transform: translateX(3px); }
+
+  /* ---------- Badge ---------- */
+  .badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(109,241,255,0.08);
+    border: 1px solid rgba(109,241,255,0.22);
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .badge-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    padding-top: clamp(40px, 7vw, 90px);
+    padding-bottom: clamp(60px, 9vw, 140px);
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: center;
+  }
+  @media (max-width: 1023px) {
+    .hero-grid { grid-template-columns: 1fr; }
+  }
+
+  .hero-eyebrow { margin-bottom: 28px; }
+
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 88px);
+    font-weight: 500;
+    margin-bottom: 24px;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .hero h1 .em {
+    background: linear-gradient(120deg, #6df1ff 0%, #b58cff 60%, #ffd791 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .hero h1 .underline {
+    position: relative; display: inline-block;
+  }
+  .hero h1 .underline::after {
+    content: ""; position: absolute;
+    left: 0; right: 0; bottom: 6%;
+    height: 0.08em;
+    background: linear-gradient(90deg, var(--cyan), transparent);
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    font-size: clamp(16px, 1.4vw, 19px);
+    color: var(--ink-mute);
+    max-width: 540px;
+    margin-bottom: 36px;
+    line-height: 1.55;
+  }
+
+  .hero-ctas {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .stats {
+    display: flex; gap: clamp(20px, 3vw, 40px);
+    flex-wrap: wrap;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .stat-num {
+    font-family: "Unbounded", sans-serif;
+    font-size: clamp(26px, 3vw, 36px);
+    font-weight: 500;
+    background: linear-gradient(180deg, #f4f7ff, #aebbe0);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* Hero scene */
+  .hero-scene {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (max-width: 1023px) {
+    .hero-scene { max-width: 460px; margin: 0 auto; }
+  }
+  @media (max-width: 600px) {
+    .hero-scene { max-width: 340px; }
+  }
+
+  .orbit {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 1px dashed rgba(180,210,255,0.18);
+  }
+  .orbit-2 { inset: 8%; border-color: rgba(180,210,255,0.12); }
+  .orbit-3 { inset: 18%; border-color: rgba(109,241,255,0.18); border-style: solid; }
+  .orbit-4 { inset: 30%; border-color: rgba(180,210,255,0.08); }
+
+  .orbit-spin {
+    position: absolute; inset: 0;
+    animation: spin 60s linear infinite;
+    will-change: transform;
+  }
+  .orbit-spin-rev {
+    position: absolute; inset: 8%;
+    animation: spin 90s linear infinite reverse;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .satellite {
+    position: absolute;
+    top: -6px; left: 50%;
+    transform: translateX(-50%);
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 16px var(--cyan), 0 0 4px #fff;
+  }
+  .satellite-2 {
+    top: auto; bottom: -5px;
+    background: var(--violet);
+    box-shadow: 0 0 14px var(--violet);
+    width: 10px; height: 10px;
+  }
+  .satellite-3 {
+    top: 50%; left: -4px;
+    transform: translateY(-50%);
+    width: 6px; height: 6px;
+    background: var(--gold);
+    box-shadow: 0 0 12px var(--gold);
+  }
+
+  .planet {
+    position: absolute;
+    width: 56%; height: 56%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 25%, #cae6ff 0%, #4f7bd0 28%, #1a2a78 60%, #050a22 95%);
+    box-shadow:
+      inset -20px -30px 80px rgba(0,0,0,0.6),
+      inset 8px 12px 60px rgba(155,195,255,0.4),
+      0 0 80px rgba(91,140,255,0.35),
+      0 0 200px rgba(91,140,255,0.2);
+    animation: float 8s ease-in-out infinite;
+    will-change: transform;
+  }
+  .planet::before {
+    /* atmosphere haze */
+    content: ""; position: absolute; inset: -8%;
+    border-radius: 50%;
+    background: radial-gradient(circle, transparent 55%, rgba(109,241,255,0.18) 65%, transparent 75%);
+    pointer-events: none;
+  }
+  .planet::after {
+    /* surface continents — abstract */
+    content: ""; position: absolute; inset: 0;
+    border-radius: 50%;
+    background:
+      radial-gradient(ellipse 30% 18% at 60% 40%, rgba(60, 130, 110, 0.55), transparent 70%),
+      radial-gradient(ellipse 18% 22% at 35% 65%, rgba(80, 140, 100, 0.4), transparent 70%),
+      radial-gradient(ellipse 22% 12% at 70% 70%, rgba(50, 110, 90, 0.4), transparent 70%);
+    mix-blend-mode: screen;
+    opacity: 0.7;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) }
+    50% { transform: translateY(-12px) }
+  }
+
+  .glow-blob {
+    position: absolute;
+    width: 90%; height: 90%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,140,255,0.35) 0%, transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+  }
+
+  /* Floating hero cards */
+  .h-card {
+    position: absolute;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    padding: 14px 18px;
+    box-shadow: var(--shadow-deep);
+    font-size: 13px;
+    animation: floatCard 7s ease-in-out infinite;
+    will-change: transform;
+  }
+  .h-card-1 {
+    top: 6%; left: -8%;
+    animation-delay: -1s;
+  }
+  .h-card-2 {
+    bottom: 12%; right: -6%;
+    animation-delay: -3s;
+  }
+  .h-card-3 {
+    top: 50%; left: -10%;
+    animation-delay: -2s;
+  }
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .h-card .k {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .h-card .v {
+    font-family: "Unbounded", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  @media (max-width: 600px) {
+    .h-card { padding: 10px 14px; }
+    .h-card .v { font-size: 14px; }
+    .h-card-1 { top: 4%; left: -4%; }
+    .h-card-2 { bottom: 8%; right: -2%; }
+    .h-card-3 { display: none; }
+  }
+
+  /* ---------- Marquee Strip (Trust) ---------- */
+  .strip {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: rgba(2,6,30,0.5);
+    padding: 22px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .strip-track {
+    display: flex; gap: 64px;
+    animation: marquee 38s linear infinite;
+    will-change: transform;
+    width: max-content;
+  }
+  .strip-item {
+    display: inline-flex; align-items: center; gap: 14px;
+    color: var(--ink-mute);
+    font-family: "Unbounded", sans-serif;
+    font-weight: 400;
+    font-size: clamp(14px, 1.5vw, 18px);
+    white-space: nowrap;
+  }
+  .strip-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* ---------- Section common ---------- */
+  section { position: relative; }
+  .sec {
+    padding-top: clamp(80px, 10vw, 140px);
+    padding-bottom: clamp(60px, 8vw, 120px);
+  }
+  .sec-head {
+    max-width: 720px;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+  .sec-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    margin-bottom: 20px;
+  }
+  .sec-eyebrow::before {
+    content: "/"; color: var(--ink-dim); margin-right: 4px;
+  }
+  .sec-title {
+    font-size: clamp(32px, 4.5vw, 56px);
+    margin-bottom: 16px;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .sec-title .em {
+    background: linear-gradient(120deg, #6df1ff, #b58cff);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .sec-lede {
+    font-size: clamp(15px, 1.4vw, 18px);
+    color: var(--ink-mute);
+    max-width: 580px;
+    line-height: 1.55;
+  }
+
+  /* ---------- Problem / Solution ---------- */
+  .ps-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  @media (max-width: 880px) {
+    .ps-wrap { grid-template-columns: 1fr; }
+  }
+  .ps-col {
+    border-radius: var(--r-lg);
+    padding: clamp(24px, 3vw, 36px);
+    border: 1px solid var(--line);
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+  }
+  .ps-col-problem {
+    background: linear-gradient(160deg, rgba(80,30,60,0.25), rgba(8,12,40,0.6));
+    border-color: rgba(255,140,180,0.18);
+  }
+  .ps-col-solution {
+    background: linear-gradient(160deg, rgba(40,80,180,0.25), rgba(8,12,40,0.6));
+    border-color: rgba(109,241,255,0.22);
+  }
+  .ps-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .ps-tag-p { background: rgba(255,140,180,0.12); color: #ffaecb; border: 1px solid rgba(255,140,180,0.3); }
+  .ps-tag-s { background: rgba(109,241,255,0.1); color: var(--cyan); border: 1px solid rgba(109,241,255,0.3); }
+  .ps-head {
+    font-family: "Unbounded", sans-serif;
+    font-size: clamp(22px, 2.5vw, 30px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .ps-list { display: flex; flex-direction: column; gap: 16px; }
+  .ps-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: var(--r-sm);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--line);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+  .ps-item:hover { transform: translateX(4px); border-color: var(--line-strong); }
+  .ps-icon {
+    width: 26px; height: 26px; flex-shrink: 0;
+    border-radius: 8px;
+    display: grid; place-items: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    margin-top: 2px;
+  }
+  .ps-icon svg { width: 14px; height: 14px; }
+  .ps-icon-p svg { color: #ffaecb; }
+  .ps-icon-s svg { color: var(--cyan); }
+  .ps-item-text {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+
+  /* ---------- About ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(28px, 4vw, 60px);
+    align-items: center;
+  }
+  @media (max-width: 880px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+  .photo-card {
+    position: relative;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow-deep);
+  }
+  .photo-card img {
+    width: 100%; height: 100%; object-fit: cover;
+    filter: saturate(0.85) contrast(1.05);
+  }
+  .photo-card::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, transparent 40%, rgba(2,6,30,0.85) 100%),
+      linear-gradient(120deg, rgba(91,140,255,0.18), transparent 60%);
+    pointer-events: none;
+  }
+  .photo-overlay {
+    position: absolute; left: 20px; right: 20px; bottom: 20px;
+    z-index: 2;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 12px;
+  }
+  .photo-overlay .name {
+    font-family: "Unbounded", sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .photo-overlay .role {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+  .photo-coords {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .about-text p {
+    color: var(--ink-mute);
+    font-size: clamp(15px, 1.3vw, 17px);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .about-text p:first-child {
+    color: var(--ink);
+    font-size: clamp(18px, 1.7vw, 22px);
+    font-weight: 500;
+    line-height: 1.45;
+    margin-bottom: 24px;
+  }
+  .about-chips {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 28px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .chip-bullet {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+  }
+
+  /* ---------- Formats ---------- */
+  .formats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 1023px) {
+    .formats-grid { grid-template-columns: 1fr; }
+  }
+  .fmt-card {
+    position: relative;
+    border-radius: var(--r-lg);
+    padding: 32px 28px;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line-strong);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    min-height: 460px;
+  }
+  .fmt-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(109,241,255,0.5);
+    box-shadow: 0 30px 80px -20px rgba(91,140,255,0.4);
+  }
+  .fmt-card::before {
+    content: ""; position: absolute;
+    top: -40%; right: -40%;
+    width: 80%; height: 80%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,140,255,0.3), transparent 65%);
+    pointer-events: none;
+    transition: transform 0.5s ease;
+  }
+  .fmt-card:hover::before {
+    transform: translate(-15%, 15%) scale(1.2);
+  }
+  .fmt-card.is-featured {
+    background: linear-gradient(160deg, rgba(91,140,255,0.18), rgba(8,12,40,0.7));
+    border-color: rgba(109,241,255,0.4);
+  }
+  .fmt-card.is-featured::before {
+    background: radial-gradient(circle, rgba(109,241,255,0.4), transparent 65%);
+  }
+  .fmt-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .fmt-num {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+    letter-spacing: 0.1em;
+  }
+  .fmt-tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(109,241,255,0.15);
+    border: 1px solid rgba(109,241,255,0.4);
+    color: var(--cyan);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .fmt-title {
+    font-family: "Unbounded", sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    position: relative; z-index: 1;
+  }
+  .fmt-who {
+    color: var(--ink-mute);
+    font-size: 14px;
+    margin-bottom: 24px;
+    position: relative; z-index: 1;
+  }
+  .fmt-feats {
+    list-style: none; padding: 0; margin: 0 0 28px 0;
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative; z-index: 1;
+  }
+  .fmt-feats li {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .fmt-feats li::before {
+    content: "";
+    width: 5px; height: 5px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 6px var(--cyan);
+    flex-shrink: 0;
+  }
+  .fmt-foot {
+    margin-top: auto;
+    display: flex; flex-direction: column;
+    gap: 18px;
+    position: relative; z-index: 1;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .fmt-price {
+    font-family: "Unbounded", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-dim);
+    display: flex; align-items: baseline; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .fmt-price span { color: var(--ink); font-size: 22px; font-weight: 500; }
+  .fmt-foot .btn { width: 100%; }
+
+  /* ---------- How (Timeline / Mission) ---------- */
+  .mission {
+    position: relative;
+    padding: clamp(40px, 5vw, 60px);
+    border-radius: var(--r-xl);
+    background: var(--glass-2);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+  }
+  .mission::before {
+    content: ""; position: absolute;
+    inset: -20% -20% auto auto;
+    width: 70%; aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(91,140,255,0.25), transparent 60%);
+    pointer-events: none;
+  }
+  .mission-steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 1023px) {
+    .mission-steps { grid-template-columns: 1fr 1fr; gap: 18px; }
+  }
+  @media (max-width: 560px) {
+    .mission-steps { grid-template-columns: 1fr; }
+  }
+  .ms {
+    position: relative;
+    padding: 28px 22px;
+    border-radius: var(--r-md);
+    background: rgba(8, 16, 50, 0.55);
+    border: 1px solid var(--line);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .ms:hover {
+    transform: translateY(-4px);
+    border-color: rgba(109,241,255,0.4);
+  }
+  .ms-step {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    color: var(--bg-0);
+    font-family: "Unbounded", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 18px;
+    box-shadow: 0 0 24px rgba(91,140,255,0.5);
+  }
+  .ms-title {
+    font-family: "Unbounded", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .ms-desc {
+    font-size: 13px;
+    color: var(--ink-mute);
+    line-height: 1.5;
+  }
+
+  /* ---------- Manifesto / Quote ---------- */
+  .manifesto {
+    text-align: center;
+    padding-top: clamp(80px, 10vw, 140px);
+    padding-bottom: clamp(80px, 10vw, 140px);
+    position: relative;
+  }
+  .manifesto-orbit {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 720px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    pointer-events: none;
+    z-index: -1;
+  }
+  .manifesto-orbit::before, .manifesto-orbit::after {
+    content: ""; position: absolute; inset: 12%;
+    border-radius: 50%;
+    border: 1px dashed rgba(120,160,255,0.15);
+  }
+  .manifesto-orbit::after { inset: 28%; }
+  .manifesto blockquote {
+    margin: 0 auto;
+    max-width: 900px;
+    font-family: "Unbounded", sans-serif;
+    font-size: clamp(28px, 4.5vw, 56px);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .manifesto blockquote .em {
+    font-style: italic;
+    background: linear-gradient(120deg, #6df1ff, #b58cff 50%, #ffd791);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
+    font-weight: 400;
+  }
+  .manifesto cite {
+    display: block;
+    margin-top: 36px;
+    font-style: normal;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+  }
+  .manifesto cite::before { content: "— "; }
+
+  /* ---------- FAQ ---------- */
+  .faq-list {
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .faq-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    padding: 28px 0;
+    text-align: left;
+    font-family: "Unbounded", sans-serif;
+    font-size: clamp(17px, 1.6vw, 22px);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+  .faq-btn:hover { color: var(--cyan); }
+  .faq-icon {
+    width: 36px; height: 36px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display: grid; place-items: center;
+    transition: background 0.2s, border-color 0.2s, transform 0.3s;
+    position: relative;
+  }
+  .faq-icon::before, .faq-icon::after {
+    content: ""; position: absolute;
+    background: var(--ink);
+    border-radius: 2px;
+    transition: transform 0.3s ease, background 0.2s;
+  }
+  .faq-icon::before { width: 12px; height: 1.5px; }
+  .faq-icon::after { width: 1.5px; height: 12px; }
+  .faq-item.is-open .faq-icon {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .faq-item.is-open .faq-icon::before,
+  .faq-item.is-open .faq-icon::after {
+    background: var(--bg-0);
+  }
+  .faq-item.is-open .faq-icon::after {
+    transform: rotate(90deg);
+  }
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .faq-answer-inner {
+    padding: 0 0 28px 0;
+    color: var(--ink-mute);
+    font-size: clamp(15px, 1.3vw, 17px);
+    line-height: 1.6;
+    max-width: 760px;
+  }
+
+  /* ---------- Final CTA / Form ---------- */
+  .cta-block {
+    position: relative;
+    border-radius: var(--r-xl);
+    padding: clamp(40px, 6vw, 80px);
+    background:
+      radial-gradient(800px 500px at 80% 0%, rgba(91,140,255,0.35), transparent 60%),
+      radial-gradient(600px 400px at 0% 100%, rgba(181,140,255,0.25), transparent 60%),
+      linear-gradient(160deg, #0a1448, #050a22);
+    border: 1px solid var(--line-strong);
+    overflow: hidden;
+  }
+  .cta-block::before {
+    content: ""; position: absolute;
+    inset: -30% -30% auto auto;
+    width: 60%; aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(109,241,255,0.18);
+  }
+  .cta-block::after {
+    content: ""; position: absolute;
+    inset: -10% -10% auto auto;
+    width: 40%; aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px dashed rgba(109,241,255,0.15);
+  }
+  .cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 5vw, 80px);
+    align-items: start;
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 880px) {
+    .cta-grid { grid-template-columns: 1fr; }
+  }
+  .cta-head h2 {
+    font-size: clamp(30px, 3.6vw, 48px);
+    line-height: 1.08;
+    margin-bottom: 20px;
+    letter-spacing: -0.03em;
+    overflow-wrap: break-word;
+  }
+  .cta-head h2 .em {
+    padding-right: 0.08em;
+    display: inline-block;
+  }
+  .cta-head p {
+    color: var(--ink-mute);
+    font-size: clamp(15px, 1.4vw, 18px);
+    margin-bottom: 28px;
+    max-width: 460px;
+  }
+  .cta-direct {
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: var(--r-md);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    display: flex; align-items: center; gap: 16px;
+  }
+  .cta-direct-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6df1ff, #5b8cff);
+    display: grid; place-items: center;
+    color: var(--bg-0);
+    flex-shrink: 0;
+  }
+  .cta-direct-text { flex: 1; min-width: 0; }
+  .cta-direct-text .l1 { font-weight: 600; font-size: 15px; }
+  .cta-direct-text .l2 { font-size: 13px; color: var(--ink-mute); margin-top: 2px; }
+
+  /* Form */
+  .form {
+    background: rgba(2,6,30,0.6);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-lg);
+    padding: clamp(24px, 3vw, 32px);
+  }
+  .form-title {
+    font-family: "Unbounded", sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  .field { margin-bottom: 10px; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  @media (max-width: 480px) {
+    .field-row { grid-template-columns: 1fr; }
+  }
+  .input, .textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    min-height: 50px;
+  }
+  .input:focus, .textarea:focus {
+    outline: none;
+    border-color: var(--cyan);
+    background: rgba(109,241,255,0.05);
+    box-shadow: 0 0 0 4px rgba(109,241,255,0.1);
+  }
+  .input::placeholder, .textarea::placeholder { color: var(--ink-dim); }
+  .textarea { min-height: 90px; resize: vertical; }
+
+  .format-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .format-label {
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+    font-family: "JetBrains Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .format-opt {
+    position: relative;
+  }
+  .format-opt input { position: absolute; opacity: 0; }
+  .format-opt label {
+    display: flex; align-items: center; justify-content: center;
+    padding: 12px 6px;
+    text-align: center;
+    border-radius: var(--r-xs);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--ink-mute);
+    transition: all 0.2s;
+    margin: 0;
+    min-height: 44px;
+  }
+  .format-opt input:checked + label {
+    background: rgba(109,241,255,0.12);
+    border-color: var(--cyan);
+    color: var(--ice);
+  }
+  .format-opt label:hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+  .form-submit {
+    width: 100%;
+    margin-top: 8px;
+  }
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 24px;
+    border-radius: var(--r-md);
+    background: rgba(109,241,255,0.08);
+    border: 1px solid rgba(109,241,255,0.3);
+    color: var(--ice);
+  }
+  .form-success.is-shown { display: block; }
+  .form-success .ok-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--cyan);
+    color: var(--bg-0);
+    display: grid; place-items: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+  .form-success h4 {
+    font-family: "Unbounded", sans-serif;
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+  .form-success p {
+    font-size: 14px; color: var(--ink-mute);
+  }
+  .form.is-sent .form-body { display: none; }
+  .form.is-sent .form-success { display: block; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    padding: 60px 0 40px;
+    border-top: 1px solid var(--line);
+    margin-top: clamp(80px, 10vw, 120px);
+  }
+  .ft-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 880px) {
+    .ft-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .ft-grid { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .ft-brand .logo { margin-bottom: 16px; }
+  .ft-brand p {
+    color: var(--ink-mute);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 320px;
+  }
+  .ft-col h5 {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-dim);
+    margin: 0 0 16px 0;
+    font-weight: 500;
+  }
+  .ft-col ul {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ft-col a {
+    color: var(--ink-mute);
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .ft-col a:hover { color: var(--cyan); }
+  .ft-bottom {
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: center;
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-family: "JetBrains Mono", monospace;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* ---------- Reveal on load ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: revealIn 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+  }
+  .reveal.r-1 { animation-delay: 0.1s; }
+  .reveal.r-2 { animation-delay: 0.25s; }
+  .reveal.r-3 { animation-delay: 0.4s; }
+  .reveal.r-4 { animation-delay: 0.55s; }
+  .reveal.r-5 { animation-delay: 0.7s; }
+  @keyframes revealIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* ---------- Reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .planet, .satellite, .h-card, .strip-track { animation: none !important; }
+    .orbit-spin, .orbit-spin-rev { animation: none !important; }
+  }
+
+  @media (max-width: 600px) {
+    /* Reduce decorative load on small screens */
+    .cosmos::after { display: none; }
+    .h-card-3 { display: none; }
+    .grid-bg { display: none; }
+  }
 </style>
-<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
-<script src="image-slot.js"></script>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="animations.jsx"></script>
-<script type="text/babel" src="cosmic.jsx"></script>
-<script type="text/babel" src="app.jsx"></script>
-<script type="text/babel" src="sections.jsx"></script>
-<script type="text/babel" src="main.jsx"></script>
+
+<div class="cosmos" aria-hidden="true"></div>
+<div class="grid-bg" aria-hidden="true"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr">
+  <div class="container hdr-row">
+    <a href="#top" class="logo" aria-label="Renchik.physics">
+      <span class="logo-mark" aria-hidden="true"></span>
+      <span>Renchik<span class="logo-dot">.</span>physics</span>
+    </a>
+    <nav class="nav" aria-label="Главная навигация">
+      <a href="#about">Обо мне</a>
+      <a href="#formats">Форматы</a>
+      <a href="#how">Как проходят</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <div class="hdr-cta">
+      <a href="#contact" class="btn btn-primary btn-sm">
+        Записаться
+        <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-text">
+      <div class="hero-eyebrow reveal r-1">
+        <span class="badge"><span class="badge-dot"></span>ЕГЭ · ОГЭ · школьная физика</span>
+      </div>
+      <h1 class="reveal r-2">
+        Физика — это <span class="em">язык,</span><br>
+        на котором написана <span class="underline">Вселенная.</span>
+      </h1>
+      <p class="hero-sub reveal r-3">
+        Помогаю разобраться в механике, полях, волнах и квантах так, чтобы физика стала понятной системой, а не набором страшных формул. ЕГЭ, ОГЭ и школьная программа — онлайн и офлайн.
+      </p>
+      <div class="hero-ctas reveal r-4">
+        <a href="#contact" class="btn btn-primary">
+          Записаться на пробное
+          <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#formats" class="btn btn-ghost">Выбрать формат</a>
+      </div>
+      <div class="stats reveal r-5">
+        <div>
+          <div class="stat-num">98 <span style="font-size: 0.5em; color: var(--ink-dim)">/ 100</span></div>
+          <div class="stat-lbl">баллов ЕГЭ</div>
+        </div>
+        <div>
+          <div class="stat-num">МГУ</div>
+          <div class="stat-lbl">физфак · стипендиат</div>
+        </div>
+        <div>
+          <div class="stat-num">№131</div>
+          <div class="stat-lbl">физмат лицей · золото</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero scene -->
+    <div class="hero-scene" aria-hidden="true">
+      <div class="glow-blob"></div>
+      <div class="orbit orbit-1">
+        <div class="orbit-spin"><div class="satellite"></div></div>
+      </div>
+      <div class="orbit orbit-2">
+        <div class="orbit-spin-rev"><div class="satellite satellite-2"></div></div>
+      </div>
+      <div class="orbit orbit-3"></div>
+      <div class="orbit orbit-4">
+        <div class="orbit-spin" style="animation-duration: 30s;"><div class="satellite satellite-3"></div></div>
+      </div>
+      <div class="planet"></div>
+
+      <div class="h-card h-card-1">
+        <div class="k">v · скорость</div>
+        <div class="v">с = 3·10⁸ м/с</div>
+      </div>
+      <div class="h-card h-card-2">
+        <div class="k">формула</div>
+        <div class="v">E = mc²</div>
+      </div>
+      <div class="h-card h-card-3">
+        <div class="k">квант</div>
+        <div class="v">ℏω</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<div class="strip" aria-label="Доверие и достижения">
+  <div class="strip-track">
+    <div class="strip-item"><span class="strip-dot"></span>98 баллов ЕГЭ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Физмат лицей №131 · золотая медаль</div>
+    <div class="strip-item"><span class="strip-dot"></span>Физический факультет МГУ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Стипендиат МГУ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Индивидуально и в мини-группах</div>
+    <div class="strip-item"><span class="strip-dot"></span>Онлайн и личные встречи</div>
+    <div class="strip-item"><span class="strip-dot"></span>Казань · Москва · Германия</div>
+    <!-- duplicate for seamless loop -->
+    <div class="strip-item"><span class="strip-dot"></span>98 баллов ЕГЭ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Физмат лицей №131 · золотая медаль</div>
+    <div class="strip-item"><span class="strip-dot"></span>Физический факультет МГУ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Стипендиат МГУ</div>
+    <div class="strip-item"><span class="strip-dot"></span>Индивидуально и в мини-группах</div>
+    <div class="strip-item"><span class="strip-dot"></span>Онлайн и личные встречи</div>
+    <div class="strip-item"><span class="strip-dot"></span>Казань · Москва · Германия</div>
+  </div>
+</div>
+
+<!-- ============ PROBLEM / SOLUTION ============ -->
+<section class="sec" id="problem">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Проблема и решение</div>
+      <h2 class="sec-title">Когда формулы кажутся <span class="em">хаосом</span> — это не про физику, это про подачу.</h2>
+      <p class="sec-lede">Физика не сложная — её просто плохо рассказывают. Я меняю отношение и собираю знание в систему, которой можно пользоваться на экзамене и в жизни.</p>
+    </div>
+
+    <div class="ps-wrap">
+      <div class="ps-col ps-col-problem">
+        <span class="ps-tag ps-tag-p">Знакомо?</span>
+        <h3 class="ps-head">Как сейчас</h3>
+        <div class="ps-list">
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+            <span class="ps-item-text">Формулы не запоминаются, а если и запоминаются — не понятно, когда их применять.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+            <span class="ps-item-text">Задачи кажутся хаосом: каждая новая — как с нуля.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+            <span class="ps-item-text">Непонятно, с чего вообще начинать подготовку и в каком порядке.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-p"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></span>
+            <span class="ps-item-text">Страшно не успеть до экзамена и провалить главное.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ps-col ps-col-solution">
+        <span class="ps-tag ps-tag-s">Как со мной</span>
+        <h3 class="ps-head">Что меняется</h3>
+        <div class="ps-list">
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span class="ps-item-text">Разбираем явления через смысл — формула становится следствием, а не магией.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span class="ps-item-text">Собираем темы в систему: видно связи между механикой, полями и квантами.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span class="ps-item-text">Тренируем задачи по шагам: алгоритм решения вместо угадайки.</span>
+          </div>
+          <div class="ps-item">
+            <span class="ps-icon ps-icon-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+            <span class="ps-item-text">Отслеживаем прогресс — ты точно знаешь, где находишься на пути к экзамену.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="sec" id="about">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Обо мне</div>
+      <h2 class="sec-title">Я Рената. И когда-то <span class="em">я тоже</span> учила физику с нуля.</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="photo-card">
+        <img src="images/renata-msu.png" alt="Рената на фоне главного здания МГУ" loading="lazy" />
+        <div class="photo-overlay">
+          <div>
+            <div class="role">Преподаватель</div>
+            <div class="name">Рената</div>
+          </div>
+          <div class="photo-coords">
+            55.7033° N<br>37.5302° E<br><span style="color: var(--cyan)">МГУ · Москва</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-text">
+        <p>Закончила физмат лицей №131 в Казани с золотой медалью, поступила на физический факультет МГУ и стала стипендиатом за успеваемость. Сейчас готовлюсь к поступлению в технические вузы Германии.</p>
+        <p>Однажды мне самой пришлось учить физику с азов. За одно лето я подготовилась к поступлению в лицей и полюбила эту науку — поэтому точно знаю, что страх перед физикой проходит, как только появляется правильный проводник.</p>
+        <p>На занятиях мы изучаем основы, практикуемся в задачах, обсуждаем эксперименты и разбираемся, где физика встречается в жизни. Я веду мини-группы и индивидуально — от механики до квантов.</p>
+        <div class="about-chips">
+          <span class="chip"><span class="chip-bullet"></span>Золотая медаль лицея №131</span>
+          <span class="chip"><span class="chip-bullet"></span>Физфак МГУ</span>
+          <span class="chip"><span class="chip-bullet"></span>Стипендиат по успеваемости</span>
+          <span class="chip"><span class="chip-bullet"></span>ЕГЭ — 98 баллов</span>
+          <span class="chip"><span class="chip-bullet"></span>Поступление в вузы Германии</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FORMATS ============ -->
+<section class="sec" id="formats">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Форматы занятий</div>
+      <h2 class="sec-title">Три траектории — <span class="em">выбирай свою.</span></h2>
+      <p class="sec-lede">Можно прийти на пробное и решить вместе, что подойдёт именно тебе. Все форматы доступны онлайн и офлайн в Казани и Москве.</p>
+    </div>
+
+    <div class="formats-grid">
+      <!-- Card 1 -->
+      <article class="fmt-card">
+        <div class="fmt-head">
+          <span class="fmt-num">01 / Мини-группа</span>
+        </div>
+        <h3 class="fmt-title">Мини-группа</h3>
+        <p class="fmt-who">До 5 человек. Для тех, кому нужна энергия команды и здоровый азарт.</p>
+        <ul class="fmt-feats">
+          <li>Живое общение и обсуждение задач</li>
+          <li>1–2 занятия в неделю по программе</li>
+          <li>Домашка с разбором ошибок</li>
+          <li>Чат группы для вопросов между уроками</li>
+        </ul>
+        <div class="fmt-foot">
+          <div class="fmt-price"><span>от 1 200₽</span>за занятие</div>
+          <a href="#contact" class="btn btn-ghost btn-sm" data-fmt="mini">В группу
+            <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 2 — featured -->
+      <article class="fmt-card is-featured">
+        <div class="fmt-head">
+          <span class="fmt-num">02 / Индивидуально</span>
+          <span class="fmt-tag">Хит</span>
+        </div>
+        <h3 class="fmt-title">Индивидуально</h3>
+        <p class="fmt-who">Один на один. Для тех, кто хочет максимальный темп и точечную работу с пробелами.</p>
+        <ul class="fmt-feats">
+          <li>Персональный план под твою цель</li>
+          <li>Закрытие пробелов вплоть до 7 класса</li>
+          <li>Интенсивная подготовка к ЕГЭ / ОГЭ</li>
+          <li>Гибкий график и быстрый прогресс</li>
+        </ul>
+        <div class="fmt-foot">
+          <div class="fmt-price"><span>от 2 500₽</span>за занятие</div>
+          <a href="#contact" class="btn btn-primary btn-sm" data-fmt="individual">Записаться
+            <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="fmt-card">
+        <div class="fmt-head">
+          <span class="fmt-num">03 / Пробное</span>
+        </div>
+        <h3 class="fmt-title">Пробное занятие</h3>
+        <p class="fmt-who">Знакомство и диагностика. Чтобы понять, подходим ли мы друг другу.</p>
+        <ul class="fmt-feats">
+          <li>Разбираем твой текущий уровень</li>
+          <li>Определяем сильные и слабые темы</li>
+          <li>Чувствуешь мой стиль преподавания</li>
+          <li>Никаких обязательств после</li>
+        </ul>
+        <div class="fmt-foot">
+          <div class="fmt-price"><span>Бесплатно</span>30–40 минут</div>
+          <a href="#contact" class="btn btn-ghost btn-sm" data-fmt="trial">Хочу попробовать
+            <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW LESSONS WORK ============ -->
+<section class="sec" id="how">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Маршрут миссии</div>
+      <h2 class="sec-title">Как проходят <span class="em">занятия</span></h2>
+      <p class="sec-lede">Системный путь от первой встречи до уверенного результата — без хаоса и зубрёжки.</p>
+    </div>
+
+    <div class="mission">
+      <div class="mission-steps">
+        <div class="ms">
+          <div class="ms-step">01</div>
+          <div class="ms-title">Диагностика</div>
+          <div class="ms-desc">Смотрим, что ты знаешь и какие темы дают сбой. Строим персональную карту.</div>
+        </div>
+        <div class="ms">
+          <div class="ms-step">02</div>
+          <div class="ms-title">Объяснение</div>
+          <div class="ms-desc">Понятно, с примерами из жизни. От явления — к формуле, а не наоборот.</div>
+        </div>
+        <div class="ms">
+          <div class="ms-step">03</div>
+          <div class="ms-title">Разбор задач</div>
+          <div class="ms-desc">Алгоритмы решения по типам. От базы до уровня сложных заданий ЕГЭ.</div>
+        </div>
+        <div class="ms">
+          <div class="ms-step">04</div>
+          <div class="ms-title">Домашка</div>
+          <div class="ms-desc">С обратной связью на каждое задание. Никакой работы «в пустоту».</div>
+        </div>
+        <div class="ms">
+          <div class="ms-step">05</div>
+          <div class="ms-title">Контроль</div>
+          <div class="ms-desc">Регулярные срезы прогресса. Ты видишь рост в баллах и понимании.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto">
+  <div class="manifesto-orbit" aria-hidden="true"></div>
+  <div class="container">
+    <blockquote>
+      «Физика — это не скучные формулы, это <span class="em">язык,</span> на котором написана Вселенная. И каждому стоило бы изучить его.»
+    </blockquote>
+    <cite>Renchik</cite>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="sec" id="faq">
+  <div class="container">
+    <div class="sec-head">
+      <div class="sec-eyebrow">Частые вопросы</div>
+      <h2 class="sec-title">Если есть <span class="em">сомнения</span> — это нормально.</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Подойдёт, если я начинаю почти с нуля?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Да. Я сама училась физике с азов и знаю, как объяснить базу без снисхождения. Сначала закроем пробелы школьной программы, потом перейдём к подготовке к экзамену. На пробном посмотрим стартовую точку и составим план.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Можно ли заниматься онлайн?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Конечно. Онлайн-уроки идут на интерактивной доске с разбором задач в реальном времени — результат не хуже личных встреч. Если ты в Казани или Москве — можно встретиться офлайн.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Что выбрать: мини-группу или индивидуально?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Мини-группа — это атмосфера, обсуждения и более доступная цена. Индивидуально — это максимальный темп и точечная работа над твоими пробелами. На пробном помогу выбрать формат под твою цель и сроки.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Готовите ли к ОГЭ?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Да, готовлю и к ОГЭ, и к ЕГЭ, и помогаю по школьной программе с 7 класса. У ОГЭ свои особенности — будем работать по их структуре и типам заданий.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Есть ли домашние задания?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Да, обязательно. Без практики между занятиями прогресс будет медленным. Объём адекватный — не «лишь бы было», а ровно столько, сколько нужно, чтобы закрепить тему. Каждую работу разбираю лично.
+        </div></div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false">
+          <span>Как записаться на пробное?</span>
+          <span class="faq-icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-answer"><div class="faq-answer-inner">
+          Оставь заявку через форму ниже или напиши мне напрямую в Telegram <a href="https://t.me/renchikik" style="color: var(--cyan);">@renchikik</a> — я отвечу в течение дня и мы согласуем удобное время.
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA / FORM ============ -->
+<section class="sec" id="contact">
+  <div class="container">
+    <div class="cta-block">
+      <div class="cta-grid">
+        <div class="cta-head">
+          <div class="sec-eyebrow">Старт</div>
+          <h2>Начни понимать физику <span class="em" style="background: linear-gradient(120deg, #6df1ff, #b58cff); -webkit-background-clip: text; background-clip: text; color: transparent; font-style: italic; font-weight: 400;">уже на пробном.</span></h2>
+          <p>Оставь заявку — расскажу про форматы, цены и согласуем удобное время. Это ни к чему не обязывает.</p>
+
+          <a href="https://t.me/renchikik" target="_blank" rel="noopener" class="cta-direct">
+            <div class="cta-direct-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M9.04 16.36l-.36 5.06c.51 0 .73-.22 1-.48l2.4-2.29 4.97 3.63c.91.5 1.56.24 1.8-.84l3.27-15.33c.32-1.35-.49-1.89-1.38-1.55L1.95 9.74C.6 10.26.62 11 1.72 11.34l4.91 1.53 11.41-7.19c.54-.36 1.03-.16.62.2L9.04 16.36z"/></svg>
+            </div>
+            <div class="cta-direct-text">
+              <div class="l1">Или напиши в Telegram</div>
+              <div class="l2">@renchikik · ответ в течение дня</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <form class="form" id="signup-form" novalidate>
+          <div class="form-body">
+            <div class="form-title">Заявка</div>
+
+            <div class="field-row">
+              <input class="input" type="text" id="f-name" name="name" placeholder="Имя" aria-label="Имя" required />
+              <input class="input" type="text" id="f-contact" name="contact" placeholder="Telegram или email" aria-label="Контакт" required />
+            </div>
+
+            <div class="format-label">Формат</div>
+            <div class="format-options" role="radiogroup" aria-label="Формат занятия">
+              <div class="format-opt">
+                <input type="radio" id="fmt-1" name="format" value="mini" />
+                <label for="fmt-1">Мини-группа</label>
+              </div>
+              <div class="format-opt">
+                <input type="radio" id="fmt-2" name="format" value="individual" />
+                <label for="fmt-2">Индивидуально</label>
+              </div>
+              <div class="format-opt">
+                <input type="radio" id="fmt-3" name="format" value="trial" checked />
+                <label for="fmt-3">Пробное</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <textarea class="textarea" id="f-msg" name="message" placeholder="Комментарий — класс, цель, удобное время (необязательно)" aria-label="Комментарий"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary form-submit">
+              Отправить
+              <svg class="btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <div class="form-success" role="status" aria-live="polite">
+            <div class="ok-icon">✓</div>
+            <h4>Заявка отправлена!</h4>
+            <p>Свяжусь в течение дня в Telegram. Если срочно — пиши <a href="https://t.me/renchikik" style="color: var(--cyan);">@renchikik</a>.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <a href="#top" class="logo">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span>Renchik<span class="logo-dot">.</span>physics</span>
+        </a>
+        <p>Репетитор по физике. Подготовка к ЕГЭ, ОГЭ и школьной программе через смысл, систему и интерес к науке.</p>
+      </div>
+      <div class="ft-col">
+        <h5>Разделы</h5>
+        <ul>
+          <li><a href="#about">Обо мне</a></li>
+          <li><a href="#formats">Форматы</a></li>
+          <li><a href="#how">Как проходят</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Контакт</h5>
+        <ul>
+          <li><a href="https://t.me/renchikik" target="_blank" rel="noopener">Telegram · @renchikik</a></li>
+          <li><a href="#contact">Заявка на занятие</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h5>Орбита</h5>
+        <ul>
+          <li><span style="color: var(--ink-mute); font-size: 14px;">Казань</span></li>
+          <li><span style="color: var(--ink-mute); font-size: 14px;">Москва</span></li>
+          <li><span style="color: var(--ink-mute); font-size: 14px;">Германия</span></li>
+          <li><span style="color: var(--ink-mute); font-size: 14px;">Онлайн · везде</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span>© 2025 Renchik.physics</span>
+      <span>Вселенная ждёт твоих открытий ✦</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-btn');
+    const ans = item.querySelector('.faq-answer');
+    btn.addEventListener('click', () => {
+      const open = item.classList.contains('is-open');
+      // close all others
+      document.querySelectorAll('.faq-item.is-open').forEach(other => {
+        if (other !== item) {
+          other.classList.remove('is-open');
+          other.querySelector('.faq-answer').style.maxHeight = '0px';
+          other.querySelector('.faq-btn').setAttribute('aria-expanded', 'false');
+        }
+      });
+      if (open) {
+        item.classList.remove('is-open');
+        ans.style.maxHeight = '0px';
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        item.classList.add('is-open');
+        ans.style.maxHeight = ans.scrollHeight + 'px';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+  // open first
+  const firstFaq = document.querySelector('.faq-item');
+  if (firstFaq) firstFaq.querySelector('.faq-btn').click();
+
+  /* Format card → preselect format in form */
+  document.querySelectorAll('[data-fmt]').forEach(link => {
+    link.addEventListener('click', () => {
+      const v = link.dataset.fmt;
+      const radio = document.querySelector(`input[name="format"][value="${v}"]`);
+      if (radio) radio.checked = true;
+    });
+  });
+
+  /* Form submit */
+  const form = document.getElementById('signup-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = form.querySelector('#f-name').value.trim();
+    const contact = form.querySelector('#f-contact').value.trim();
+    if (!name || !contact) {
+      if (!name) form.querySelector('#f-name').focus();
+      else form.querySelector('#f-contact').focus();
+      return;
+    }
+    form.classList.add('is-sent');
+  });
+
+  /* Smooth scroll: already handled by html { scroll-behavior } */
+</script>
+
 </body>
 </html>
