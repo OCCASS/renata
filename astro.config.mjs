@@ -1,12 +1,16 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
-// When deployed at occass.github.io/renata, Astro needs the /renata prefix.
-// When moving to renata-fizika.ru at apex, delete the base line and the
-// CNAME-based custom domain will serve everything from /.
 export default defineConfig({
-  site: 'https://occass.github.io',
-  base: '/renata/',
+  site: 'https://renchik-physics.ru',
   trailingSlash: 'ignore',
+  integrations: [
+    sitemap({
+      changefreq: 'monthly',
+      priority: 0.7,
+      lastmod: new Date(),
+    }),
+  ],
   build: {
     inlineStylesheets: 'auto',
   },

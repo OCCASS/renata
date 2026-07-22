@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /send.php
+Disallow: /uploads/
+Disallow: /scripts/
+
+Sitemap: https://renchik-physics.ru/sitemap-index.xml

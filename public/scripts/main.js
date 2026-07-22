@@ -3,9 +3,7 @@
  * Cookie consent → Yandex.Metrika → animations + form submission.
  * ------------------------------------------------------------------ */
 
-/* === CONFIG: replace YM_COUNTER_ID with your real Yandex.Metrika id.
- *    Until it is a positive number, Metrika is fully disabled. === */
-const YM_COUNTER_ID = 0;          // <-- TODO: set when counter is registered
+const YM_COUNTER_ID = 109477206;
 const CONSENT_KEY = 'consent.cookies.v1';
 const CONSENT_VERSION = 1;
 
@@ -49,14 +47,15 @@ function loadYandexMetrika() {
     a = e.getElementsByTagName(t)[0];
     k.async = 1; k.src = r;
     a.parentNode.insertBefore(k, a);
-  })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+  })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + YM_COUNTER_ID, 'ym');
 
   window.ym(YM_COUNTER_ID, 'init', {
-    clickmap: true,
-    trackLinks: true,
-    accurateTrackBounce: true,
+    ssr: true,
     webvisor: true,
-    defer: false,
+    clickmap: true,
+    ecommerce: 'dataLayer',
+    accurateTrackBounce: true,
+    trackLinks: true,
   });
 }
 
